@@ -9,7 +9,7 @@ const registerSchema = new Scehma({
     type: String,
     required: true,
   },
-  lasttName: {
+  lastName: {
     type: String,
     required: true,
   },
@@ -34,7 +34,7 @@ function emailValidator(value) {
 // function passwordValidator(value) {
 //   return /^.+@.+\..+$/.test(value);
 // }
-userSchema.pre("save", async function (next) {
+registerSchema.pre("save", async function (next) {
   try {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(this.password, salt);
@@ -45,7 +45,7 @@ userSchema.pre("save", async function (next) {
   }
 });
 
-userSchema.methods.isPasswordValid = async function (value) {
+registerSchema.methods.isPasswordValid = async function (value) {
   try {
     return await bcrypt.compare(value, this.password);
   } catch (error) {
@@ -53,4 +53,4 @@ userSchema.methods.isPasswordValid = async function (value) {
   }
 };
 
-module.exports = mongoose.models("user", registerSchema);
+module.exports = mongoose.model("user", registerSchema);
