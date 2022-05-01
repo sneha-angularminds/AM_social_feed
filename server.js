@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { MONGODB } = require('./config');
 const userRoutes = require('./routes/register');
+const auth = require('./middleware/auth')
 
 const app = express();
 dotenv.config();
@@ -13,7 +14,6 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/', userRoutes);
-
 
 //Error handling logic
 app.use((err,req,res,next) => {
