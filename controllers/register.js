@@ -34,7 +34,7 @@ exports.login = async (req, res, next) => {
       return res.status(403).json({ error: { message: "invalid password" } });
     const token = getSignedToken(user);
     // res.status(200).json({ token, user});
-    res.status(200).json({ user: {firstName:user.firstName, lastName:user.lastName, email:user.email }, token});
+    res.status(200).json({ user: {_id: user._id, firstName:user.firstName, lastName:user.lastName, email:user.email }, token});
 }
 
 exports.changepassword = async (req, res, next) => {
@@ -72,6 +72,6 @@ getSignedToken = (user) => {
       password: user.password
     },
     SECRET_KEY,
-    { expiresIn: "1h" }
+    { expiresIn: "10h" }
   );
 };

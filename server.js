@@ -1,19 +1,24 @@
 const express = require('express');
 const dotenv = require('dotenv');
+// const path = require('path')
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { MONGODB } = require('./config');
 const userRoutes = require('./routes/register');
+const editRoutes = require('./routes/editProfile');
 const auth = require('./middleware/auth')
 
 const app = express();
 dotenv.config();
 
 app.use(cors());
+// app.use(express.static(__dirname));
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.json());
 
 app.use('/', userRoutes);
+app.use('/edit', auth, editRoutes);
 
 //Error handling logic
 app.use((err,req,res,next) => {
