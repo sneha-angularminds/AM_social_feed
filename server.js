@@ -6,8 +6,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { MONGODB } = require('./config');
 const userRoutes = require('./routes/register');
-const editRoutes = require('./routes/editProfile');
-const auth = require('./middleware/auth')
+const postRoutes = require('./routes/posts');
+// const auth = require('./middleware/auth')
 
 const app = express();
 dotenv.config();
@@ -15,10 +15,11 @@ dotenv.config();
 app.use(cors());
 // app.use(express.static(__dirname));
 app.use('/uploads', express.static('uploads'));
+app.use('/posts', express.static('posts'));
 app.use(bodyParser.json());
 
 app.use('/', userRoutes);
-app.use('/edit', auth, editRoutes);
+app.use('/post-img', postRoutes);
 
 //Error handling logic
 app.use((err,req,res,next) => {
@@ -32,5 +33,5 @@ mongoose
   .catch((err) => (err) => console.log(err.message));
 
 
-const PORT = process.env.PORT || 3300;
+const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));

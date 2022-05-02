@@ -22,9 +22,24 @@ const registerSchema = new Scehma({
   },
   password: {
     type: String,
-    required: true,
-    // validate: [passwordValidator, "incorrect password field"],
+    required: true
   },
+  name: {
+    type: String,
+  },
+  bio: { type: String },
+  gender: {
+    type: String,
+  },
+  dob: {
+    type: String,
+  },
+  mobile: {
+    type: String,
+  },
+  photo: {
+    type: String,
+  }
 });
 
 function emailValidator(value) {
