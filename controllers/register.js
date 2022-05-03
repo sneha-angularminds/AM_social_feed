@@ -113,6 +113,17 @@ exports.profile = async (req, res, next) => {
   }
 }
 
+// exports.logout = (req, res, next) => {
+//   // remove the req.user property and clear the login session
+//   req.logout();
+
+//   // destroy session data
+//   req.session = null;
+
+//   // redirect to homepage
+//   res.redirect("/");
+// }
+
 getSignedToken = (user) => {
   return jwt.sign(
     {

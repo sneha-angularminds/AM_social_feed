@@ -19,7 +19,7 @@ app.use('/posts', express.static('posts'));
 app.use(bodyParser.json());
 
 app.use('/', userRoutes);
-app.use('/post-img', postRoutes);
+app.use('/post', postRoutes);
 
 //Error handling logic
 app.use((err,req,res,next) => {

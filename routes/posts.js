@@ -7,12 +7,6 @@ const postController = require("./../controllers/posts");
 
 const storage = multer.diskStorage({
   destination: "posts/",
-//   destination: function(req, file, cb) {
-//     cb(null, "./posts/");
-//   },
-  // filename: function(req, file, cb) {
-  //   cb(null, new Date().toISOString() + file.originalname);
-  // }
   filename: function (req, file, cb) {
     cb(null, Date.now() + file.originalname);
   },
@@ -40,5 +34,8 @@ const upload = multer({
 });
 
 router.post("/", auth, upload.single("profileImg"), postController.feedPost);
+router.put("/comment/:postId", auth, postController.postComment);
+router.put("/like/:postId", auth, postController.postLike);
+router.get("/getAllPosts", auth, postController.getAllPosts);
 
 module.exports = router

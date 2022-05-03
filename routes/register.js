@@ -9,5 +9,6 @@ router.post("/login", userController.login);
 router.post("/change-password", auth, userController.changepassword);
 router.post("/edit/:editId", auth, upload.single("photo"), userController.editUser);
 router.get("/user-profile", auth, userController.profile);
+// router.get("/logout", userController.logout);
 
 module.exports = router;

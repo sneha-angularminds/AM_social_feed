@@ -1,8 +1,11 @@
 const { type } = require("express/lib/response");
 const mongoose = require("mongoose");
-const Scehma = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-const postSchema = new Scehma({
+const postSchema = new Schema({
+  userId: {
+    type: String,
+  },
   profileImg: {
     type: String,
     required: true,
@@ -12,9 +15,10 @@ const postSchema = new Scehma({
     required: true,
   },
   like: {
-    type: Boolean,
+    type: Array,
+    default: [],
   },
-  comment: {
+  comments: {
     type: Array,
     default: [],
   },
