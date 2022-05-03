@@ -5,8 +5,8 @@ const bcrypt = require("bcryptjs");
 const validate = require('./../validation')
 
 exports.register = async (req, res, next) => {
-  // const {error} = validate.validateUser(req.body)
-  // if (error) return res.status(400).send(error.details[0].message);
+  const { error } = validate.validateRegister(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
   const { firstName, lastName, email, password } = req.body;
   const user = await User.findOne({ email });
@@ -24,8 +24,8 @@ exports.register = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-  // const {error} = validate.validateUser(req.body);
-  // if (error) return res.status(400).send(error.details[0].message);
+  const {error} = validate.validateUser(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
   const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -45,8 +45,8 @@ exports.login = async (req, res, next) => {
 }
 
 exports.changepassword = async (req, res, next) => {
-  // const { error } = validate.changePassword(req.body);
-  // if (error) return res.status(400).send(error.details[0].message);
+  const { error } = validate.changePassword(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
   const { oldPassword, newPassword, confirmPassword } = req.body;
   const current_user = req.user;
@@ -72,8 +72,8 @@ exports.changepassword = async (req, res, next) => {
 }
 
 exports.editUser = async (req, res, next) => {
-  // const {error} = validate.editProfile(req.body);
-  // if (error) return res.status(400).send(error.details[0].message);
+  const {error} = validate.editProfile(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
   
   const { name, bio, gender, dob, email, mobile } = req.body;
     // console.log(req.file)
@@ -123,6 +123,47 @@ exports.profile = async (req, res, next) => {
 //   // redirect to homepage
 //   res.redirect("/");
 // }
+
+exports.googleLogin = async (req, res, next) => {
+  const { idToken } = req.body;
+
+  const ticket = await client.verifyIdToken({
+    idToken: idToken,
+    requiredAudience: `${process.env.GOOGLE_CLIENT_ID}`,
+  });
+
+  const payload = ticket.getPayload();
+
+  try {
+    let user = await User.findOne({ email: payload.email });
+    if (!user) {
+      return res.status(400).send({
+        Error: true,
+        message: "User not registered! Please sign up to continue",
+      });
+    } else {
+      const token = jwt.sign(
+        {
+          _id: user._id,
+          email: user.email,
+          name: user.name,
+        },
+        process.env.GOOGLE_CLIENT_SECRET,
+        {
+          expiresIn: "12h",
+        }
+      );
+      return res.status(200).json({
+        Error: false,
+        message: "",
+        user: { ...payload, token: token },
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(401).send(` ${err}`);
+  }
+}
 
 getSignedToken = (user) => {
   return jwt.sign(

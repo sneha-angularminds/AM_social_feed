@@ -7,22 +7,22 @@ const bcrypt = require("bcryptjs");
 const registerSchema = new Scehma({
   firstName: {
     type: String,
-    required: true,
+    // required: true,
   },
   lastName: {
     type: String,
-    required: true,
+    // required: true,
   },
   email: {
     type: String,
-    required: true,
+    // required: true,
     unique: true,
     lowercase: true,
     validate: [emailValidator, "incorrect email field"],
   },
   password: {
     type: String,
-    required: true
+    // required: true
   },
   name: {
     type: String,
