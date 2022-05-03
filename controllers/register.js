@@ -2,7 +2,10 @@ const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("./../config");
 const User = require("./../models/register");
 const bcrypt = require("bcryptjs");
-const validate = require('./../validation')
+const validate = require('./../validation');
+const client = new OAuth2Client({
+  clientId: `${process.env.GOOGLE_CLIENT_ID}`,
+});
 
 exports.register = async (req, res, next) => {
   const { error } = validate.validateRegister(req.body);
