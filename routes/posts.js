@@ -3,7 +3,6 @@ const express = require("express");
 const router = express.Router();
 const auth = require("./../middleware/auth");
 const postController = require("./../controllers/posts"); 
-// const upload = multer({dest: 'posts/'});
 
 const storage = multer.diskStorage({
   destination: "posts/",

@@ -36,7 +36,8 @@ exports.editProfile = (user) => {
     email: Joi.string().required(),
     bio: Joi.string(),
     dob: Joi.string(),
-    mobile: Joi.string()
+    mobile: Joi.string(),
+    photo:Joi.string()
   });
   return JoiSchema.validate(user);
 };

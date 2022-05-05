@@ -99,13 +99,15 @@ exports.postLike = async (req, res, next) => {
 
 exports.getAllPosts = async (req, res, next) => {
   const { page, size } = req.query;
-  const posts = await Posts.find()
-    .limit(size * 1)
-    .skip((page - 1) * size);
-  try {
-    res.status(200).json({posts});
-  } catch (err) {
-    err.status = 400;
-    next(err);
-  }
+  var mysort = { createdOn: -1 };    
+    const posts = await Posts.find()
+      .sort(mysort)
+      .limit(size * 1)
+      .skip((page - 1) * size);
+    try {
+      res.status(200).json({ posts });
+    } catch (err) {
+      err.status = 400;
+      next(err);
+    }
 };

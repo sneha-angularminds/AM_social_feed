@@ -3,6 +3,8 @@ const { SECRET_KEY } = require("./../config");
 const User = require("./../models/register");
 const bcrypt = require("bcryptjs");
 const validate = require('./../validation');
+const {OAuth2Client} = require('google-auth-library');
+
 const client = new OAuth2Client({
   clientId: `${process.env.GOOGLE_CLIENT_ID}`,
 });
@@ -94,7 +96,7 @@ exports.editUser = async (req, res, next) => {
           dob: dob,
           email: email,
           mobile: mobile,
-          photo: req.file.path,
+          photo: req.file? req.file.path : '',
         }
       );
       let user = await User.findOne({ _id: current_user.id });
@@ -115,17 +117,6 @@ exports.profile = async (req, res, next) => {
     next(err);
   }
 }
-
-// exports.logout = (req, res, next) => {
-//   // remove the req.user property and clear the login session
-//   req.logout();
-
-//   // destroy session data
-//   req.session = null;
-
-//   // redirect to homepage
-//   res.redirect("/");
-// }
 
 exports.googleLogin = async (req, res, next) => {
   const { idToken } = req.body;
