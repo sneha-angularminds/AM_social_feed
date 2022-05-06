@@ -35,10 +35,10 @@ exports.login = async (req, res, next) => {
   const { email, password } = req.body;
     const user = await User.findOne({ email });
     console.log(user)
-    if (!user)
-      return res
-        .status(403)
-        .json({ error: { message: "invalid email/password" } });
+  if (!user)
+    return res
+      .status(403)
+      .json({ error: { message: "invalid email" } });
     // console.log(user.password)
     const isValid = await user.isPasswordValid(password);
     if (!isValid)
@@ -127,9 +127,12 @@ exports.googleLogin = async (req, res, next) => {
   });
 
   const payload = ticket.getPayload();
+  // console.log(payload)
 
   try {
     let user = await User.findOne({ email: payload.email });
+
+    console.log(user)
     if (!user) {
       return res.status(400).send({
         Error: true,
@@ -142,20 +145,26 @@ exports.googleLogin = async (req, res, next) => {
           email: user.email,
           name: user.name,
         },
-        process.env.GOOGLE_CLIENT_SECRET,
+        SECRET_KEY,
         {
-          expiresIn: "12h",
+          expiresIn: "10h",
         }
       );
-      return res.status(200).json({
-        Error: false,
-        message: "",
-        user: { ...payload, token: token },
-      });
+      return res.status(200).json({user: {_id: user._id, firstName:user.firstName, lastName:user.lastName, email:user.email }, token});
     }
   } catch (err) {
     console.log(err);
     return res.status(401).send(` ${err}`);
+  }
+}
+
+exports.getAllUsers = async (req, res, next) => {
+  try {
+    const user = await User.find();
+    res.status(200).json({ user });
+  } catch (err) {
+    err.status = 400;
+    next(err);
   }
 }
 
@@ -166,7 +175,9 @@ getSignedToken = (user) => {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      password: user.password
+      password: user.password,
+      photo: user.photo,
+      name: user.name
     },
     SECRET_KEY,
     { expiresIn: "10h" }

@@ -36,5 +36,6 @@ router.post("/", auth, upload.single("profileImg"), postController.feedPost);
 router.put("/comment/:postId", auth, postController.postComment);
 router.put("/like/:postId", auth, postController.postLike);
 router.get("/getAllPosts", auth, postController.getAllPosts);
+router.delete("/delete/:postId", auth, postController.deletePost);
 
 module.exports = router

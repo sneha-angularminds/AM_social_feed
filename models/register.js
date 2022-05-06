@@ -46,9 +46,6 @@ function emailValidator(value) {
   return /^.+@.+\..+$/.test(value);
 }
 
-// function passwordValidator(value) {
-//   return /^.+@.+\..+$/.test(value);
-// }
 registerSchema.pre("save", async function (next) {
   try {
     const salt = await bcrypt.genSalt(10);

@@ -1,6 +1,6 @@
 const User = require("./../models/register");
-const validate = require("./../validation");
 const Posts = require("./../models/posts");
+// const { find } = require("./../models/posts");
 
 exports.feedPost = async (req, res, next) => {
   const { caption } = req.body;
@@ -8,7 +8,12 @@ exports.feedPost = async (req, res, next) => {
   console.log(user);
   let post;
   if (user) {
-    post = new Posts({ profileImg: req.file.path, caption });
+    post = new Posts({
+      profileImg: req.file.path,
+      caption,
+      userName: `${user.firstName} ${user.lastName}`,
+      createdBy: user._id,
+    });
   }
   try {
     await post.save();
@@ -22,7 +27,12 @@ exports.feedPost = async (req, res, next) => {
 
 exports.postComment = async (req, res, next) => {
   const { comment } = req.body;
-  const com = { comment: comment, userId: req.user.id };
+  let user = await User.findOne({ _id: req.user.id });
+  const com = {
+    comment: comment,
+    userId: req.user.id,
+    userName: `${user.firstName} ${user.lastName}`,
+  };
   // const posts = await Posts.findOne({ _id: req.params.postId });
   try {
     await Posts.findByIdAndUpdate(
@@ -30,8 +40,9 @@ exports.postComment = async (req, res, next) => {
       { $push: { comments: com } }
     );
     const postsComment = await Posts.findOne({ _id: req.params.postId });
-    // console.log(post)
-    res.status(200).json({ postsComment });
+    // console.log("comment",postsComment);
+    // console.log("user",user);
+    res.status(200).json({ postsComment});
   } catch (err) {
     err.status = 400;
     next(err);
@@ -110,4 +121,15 @@ exports.getAllPosts = async (req, res, next) => {
       err.status = 400;
       next(err);
     }
+};
+
+exports.deletePost = async (req, res, next) => {
+  const { postId } = req.params;
+  try {
+    await Posts.findByIdAndRemove(postId);
+    res.status(200).json({ success: true });
+  } catch (error) {
+    error.status = 400;
+    next(error);
+  }
 };

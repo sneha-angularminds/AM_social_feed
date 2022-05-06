@@ -14,7 +14,7 @@ exports.validateRegister = (user) => {
 
 exports.validateUser = (user) => {
   const JoiSchema = Joi.object({
-    password: Joi.string().min(6).regex(regularExpression),
+    password: Joi.string().min(6).regex(regularExpression).required(),
     email: Joi.string().required(),
   });
   return JoiSchema.validate(user);
@@ -22,9 +22,9 @@ exports.validateUser = (user) => {
 
 exports.changePassword = (user) => {
   const JoiSchema = Joi.object({
-    oldPassword: Joi.string().min(6).regex(regularExpression),
-    newPassword: Joi.string().min(6).regex(regularExpression),
-    confirmPassword: Joi.string().min(6).regex(regularExpression),
+    oldPassword: Joi.string().min(6).regex(regularExpression).required(),
+    newPassword: Joi.string().min(6).regex(regularExpression).required(),
+    confirmPassword: Joi.string().min(6).regex(regularExpression).required(),
   });
   return JoiSchema.validate(user);
 };

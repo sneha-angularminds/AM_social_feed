@@ -30,6 +30,16 @@ const postSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: "user"
+  },
+  userName: {
+    type: String
+  },
+  pic: {
+    type: String
+  }
 });
 
 postSchema.pre("save", function (next) {
