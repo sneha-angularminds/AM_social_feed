@@ -21,7 +21,7 @@ exports.register = async (req, res, next) => {
   try {
     await newUser.save();
     // const token = getSignedToken(newUser);
-    res.status(200).json({ newUser });
+    res.status(201).json({ newUser });
   } catch (err) {
     err.status = 400;
     next(err);
@@ -46,7 +46,7 @@ exports.login = async (req, res, next) => {
       return res.status(403).json({ error: { message: "Password not valid" } });
     const token = getSignedToken(user);
     // res.status(200).json({ token, user});
-    res.status(200).json({ user: {_id: user._id, firstName:user.firstName, lastName:user.lastName, email:user.email }, token});
+    res.status(201).json({ user: {_id: user._id, firstName:user.firstName, lastName:user.lastName, email:user.email }, token});
 }
 
 exports.changepassword = async (req, res, next) => {
@@ -65,7 +65,7 @@ exports.changepassword = async (req, res, next) => {
       let user = await User.findOne({ _id: current_user.id })
       // console.log(user)
       let token = getSignedToken(user)
-      return res.status(200).json({ user, token });
+      return res.status(201).json({ user, token });
     }
     else{
       return res.status(400).json({ message: 'New password and confirm password does not match' });

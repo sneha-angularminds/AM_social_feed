@@ -18,7 +18,7 @@ exports.feedPost = async (req, res, next) => {
   try {
     await post.save();
     // const token = getSignedToken(newUser);
-    res.status(200).json({ post });
+    res.status(201).json({ post });
   } catch (err) {
     err.status = 400;
     next(err);
@@ -61,7 +61,7 @@ exports.postLike = async (req, res, next) => {
        );
       const postsLike = await Posts.findOne({ _id: req.params.postId });
         // console.log(post)
-        res.status(200).json({ postsLike });
+        res.status(201).json({ postsLike });
     } else {
       // post.like.push(req.user.id);
       // console.log("else",post);
@@ -127,7 +127,7 @@ exports.deletePost = async (req, res, next) => {
   const { postId } = req.params;
   try {
     await Posts.findByIdAndRemove(postId);
-    res.status(200).json({ success: true });
+    res.status(204).json({ success: true });
   } catch (error) {
     error.status = 400;
     next(error);
