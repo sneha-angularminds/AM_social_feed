@@ -187,7 +187,6 @@ getSignedToken = (user) => {
       password: user.password,
       createdOn: user.createdOn,
       updatedAt: user.updatedAt,
-      photo: user.photo || "",
       name: user.name || "",
     },
     SECRET_KEY,
