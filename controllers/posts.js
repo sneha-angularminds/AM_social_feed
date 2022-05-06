@@ -4,7 +4,7 @@ const Posts = require("./../models/posts");
 
 exports.feedPost = async (req, res, next) => {
   const { caption } = req.body;
-  let user = await User.findOne({ _id: req.user.id });
+  let user = await User.findOne({ _id: req.user._id });
   console.log(user);
   let post;
   if (user) {
@@ -27,10 +27,10 @@ exports.feedPost = async (req, res, next) => {
 
 exports.postComment = async (req, res, next) => {
   const { comment } = req.body;
-  let user = await User.findOne({ _id: req.user.id });
+  let user = await User.findOne({ _id: req.user._id });
   const com = {
     comment: comment,
-    userId: req.user.id,
+    userId: req.user._id,
     userName: `${user.firstName} ${user.lastName}`,
   };
   // const posts = await Posts.findOne({ _id: req.params.postId });
@@ -42,7 +42,7 @@ exports.postComment = async (req, res, next) => {
     const postsComment = await Posts.findOne({ _id: req.params.postId });
     // console.log("comment",postsComment);
     // console.log("user",user);
-    res.status(200).json({ postsComment});
+    res.status(200).json({ postsComment });
   } catch (err) {
     err.status = 400;
     next(err);
@@ -52,23 +52,23 @@ exports.postComment = async (req, res, next) => {
 exports.postLike = async (req, res, next) => {
   const post = await Posts.findOne({ _id: req.params.postId });
   try {
-    if (post.like.includes(req.user.id)) {
-      const postLike = post.like.filter((p) => p !== req.user.id);
-       await Posts.updateOne(
-         { _id: req.params.postId },
-         { like: postLike }
-         // {$pull: { like: req.user.id }}
-       );
+    if (post.like.includes(req.user._id)) {
+      const postLike = post.like.filter((p) => p !== req.user._id);
+      await Posts.updateOne(
+        { _id: req.params.postId },
+        { like: postLike }
+        // {$pull: { like: req.user.id }}
+      );
       const postsLike = await Posts.findOne({ _id: req.params.postId });
-        // console.log(post)
-        res.status(201).json({ postsLike });
+      // console.log(post)
+      res.status(201).json({ postsLike });
     } else {
       // post.like.push(req.user.id);
       // console.log("else",post);
       await Posts.updateOne(
         { _id: req.params.postId },
         {
-          $push: { like: req.user.id },
+          $push: { like: req.user._id },
         }
       );
       const postsLike = await Posts.findOne({ _id: req.params.postId });
@@ -110,17 +110,17 @@ exports.postLike = async (req, res, next) => {
 
 exports.getAllPosts = async (req, res, next) => {
   const { page, size } = req.query;
-  var mysort = { createdOn: -1 };    
-    const posts = await Posts.find()
-      .sort(mysort)
-      .limit(size * 1)
-      .skip((page - 1) * size);
-    try {
-      res.status(200).json({ posts });
-    } catch (err) {
-      err.status = 400;
-      next(err);
-    }
+  var mysort = { createdOn: -1 };
+  const posts = await Posts.find()
+    .sort(mysort)
+    .limit(size * 1)
+    .skip((page - 1) * size);
+  try {
+    res.status(200).json({ posts });
+  } catch (err) {
+    err.status = 400;
+    next(err);
+  }
 };
 
 exports.deletePost = async (req, res, next) => {

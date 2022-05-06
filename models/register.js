@@ -39,7 +39,15 @@ const registerSchema = new Scehma({
   },
   photo: {
     type: String,
-  }
+  },
+  createdOn: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 function emailValidator(value) {
