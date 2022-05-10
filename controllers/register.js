@@ -81,12 +81,11 @@ exports.editUser = async (req, res, next) => {
   const { error } = validate.editProfile(req.body);
 
   if (error) return res.status(400).send(error.details[0].message);
-
-  const { name, bio, gender, dob, email, mobile } = req.body;
+  // const { name, bio, gender, dob, email, mobile } = req.body;
   // console.log(req.file)
   // console.log(req.file.path)
   const current_user = req.user;
-  console.log(current_user);
+  // console.log(current_user.photo);
   // console.log(req.params.editId);
   if (current_user._id == req.params.editId) {
     await User.updateOne(
@@ -101,6 +100,7 @@ exports.editUser = async (req, res, next) => {
         photo: req.file ? req.file.path : "",
       }
     );
+    await User.findByIdAndUpdate(current_user._id, req.body)
     let user = await User.findOne({ _id: current_user._id });
     console.log(user);
     res.status(200).json({ user });
@@ -188,6 +188,7 @@ getSignedToken = (user) => {
       createdOn: user.createdOn,
       updatedAt: user.updatedAt,
       name: user.name || "",
+      photo: user.photo
     },
     SECRET_KEY,
     { expiresIn: "10h" }
