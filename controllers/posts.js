@@ -5,7 +5,7 @@ const Posts = require("./../models/posts");
 exports.feedPost = async (req, res, next) => {
   const { caption } = req.body;
   let user = await User.findOne({ _id: req.user._id });
-  console.log(user);
+  // console.log(user);
   let post;
   if (user) {
     post = new Posts({

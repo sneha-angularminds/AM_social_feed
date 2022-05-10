@@ -34,7 +34,7 @@ exports.login = async (req, res, next) => {
 
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  console.log(user);
+  // console.log(user);
   if (!user)
     return res.status(403).json({ error: { message: "invalid email" } });
   // console.log(user.password)
@@ -55,7 +55,7 @@ exports.changepassword = async (req, res, next) => {
   const { oldPassword, newPassword, confirmPassword } = req.body;
   const current_user = req.user;
   // console.log(User)
-  console.log("current",current_user);
+  // console.log("current",current_user);
   if (bcrypt.compareSync(oldPassword, current_user.password)) {
     if (newPassword === confirmPassword) {
       let hashPassword = bcrypt.hashSync(newPassword, 10);
@@ -102,7 +102,7 @@ exports.editUser = async (req, res, next) => {
       }
     );
     let user = await User.findOne({ _id: current_user._id });
-    console.log("user",user);
+    // console.log("user",user);
     return res.status(200).json({ user });
   }
   
@@ -115,7 +115,7 @@ exports.editUser = async (req, res, next) => {
   const user1 = await User.findById({ _id: current_user._id });
   // console.log("u",user.photo);
   // console.log(req.params.editId);
-  console.log("u", user1);
+  // console.log("u", user1);
   if (current_user._id == req.params.editId) {
     await User.updateOne(
       { _id: current_user._id },
@@ -152,7 +152,7 @@ exports.googleLogin = async (req, res, next) => {
   try {
     let user = await User.findOne({ email: payload.email });
 
-    console.log(user);
+    // console.log(user);
     if (!user) {
       return res.status(400).send({
         Error: true,
@@ -181,7 +181,7 @@ exports.googleLogin = async (req, res, next) => {
       });
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     return res.status(401).send(` ${err}`);
   }
 };
