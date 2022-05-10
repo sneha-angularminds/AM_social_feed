@@ -9,6 +9,7 @@ const client = new OAuth2Client({
   clientId: `${process.env.GOOGLE_CLIENT_ID}`,
 });
 
+//------------------------For sign-up page------------------------------------//
 exports.register = async (req, res, next) => {
   const { error } = validate.validateRegister(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -28,6 +29,7 @@ exports.register = async (req, res, next) => {
   }
 };
 
+//------------------------For login page------------------------------------//
 exports.login = async (req, res, next) => {
   const { error } = validate.validateUser(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -48,6 +50,7 @@ exports.login = async (req, res, next) => {
   // res.status(201).json({ user: {_id: user._id, firstName:user.firstName, lastName:user.lastName, email:user.email }, token});
 };
 
+//------------------------For change password------------------------------------//
 exports.changepassword = async (req, res, next) => {
   const { error } = validate.changePassword(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -77,6 +80,7 @@ exports.changepassword = async (req, res, next) => {
   }
 };
 
+//------------------------For edit user------------------------------------//
 exports.editUser = async (req, res, next) => {
   const { error } = validate.editProfile(req.body);
 
@@ -138,6 +142,7 @@ exports.editUser = async (req, res, next) => {
   }
 };
 
+//------------------------For google login------------------------------------//
 exports.googleLogin = async (req, res, next) => {
   const { idToken } = req.body;
 
@@ -186,6 +191,7 @@ exports.googleLogin = async (req, res, next) => {
   }
 };
 
+//------------------------For logged in user------------------------------------//
 exports.profile = async (req, res, next) => {
   try {
     const user = await User.findOne({ _id: req.user._id });
@@ -196,6 +202,7 @@ exports.profile = async (req, res, next) => {
   }
 };
 
+//------------------------For all user data------------------------------------//
 exports.getAllUsers = async (req, res, next) => {
   try {
     const user = await User.find();
@@ -206,6 +213,7 @@ exports.getAllUsers = async (req, res, next) => {
   }
 };
 
+//------------------------Function for getting token------------------------------------//
 getSignedToken = (user) => {
   return jwt.sign(
     {

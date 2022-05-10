@@ -2,6 +2,7 @@ const User = require("./../models/register");
 const Posts = require("./../models/posts");
 // const { find } = require("./../models/posts");
 
+//-----------To add new post-----------//
 exports.feedPost = async (req, res, next) => {
   const { caption } = req.body;
   let user = await User.findOne({ _id: req.user._id });
@@ -25,6 +26,7 @@ exports.feedPost = async (req, res, next) => {
   }
 };
 
+//-----------To add new comment-----------//
 exports.postComment = async (req, res, next) => {
   const { comment } = req.body;
   let user = await User.findOne({ _id: req.user._id });
@@ -49,6 +51,7 @@ exports.postComment = async (req, res, next) => {
   }
 };
 
+//-----------To like post-----------//
 exports.postLike = async (req, res, next) => {
   const post = await Posts.findOne({ _id: req.params.postId });
   try {
@@ -80,6 +83,8 @@ exports.postLike = async (req, res, next) => {
     next(err);
   }
 };
+
+//------------------------For pagination------------------------------------//
 
 // exports.getAllPosts = async (req, res, next) => {
 //   var pageNo = parseInt(req.query.page);
