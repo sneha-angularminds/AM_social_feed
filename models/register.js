@@ -48,6 +48,10 @@ const registerSchema = new Scehma({
     type: Date,
     default: Date.now,
   },
+  removeImg: {
+    type: Boolean,
+    default: false
+  }
 });
 
 function emailValidator(value) {

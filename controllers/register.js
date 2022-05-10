@@ -55,7 +55,7 @@ exports.changepassword = async (req, res, next) => {
   const { oldPassword, newPassword, confirmPassword } = req.body;
   const current_user = req.user;
   // console.log(User)
-  console.log(current_user);
+  console.log("current",current_user);
   if (bcrypt.compareSync(oldPassword, current_user.password)) {
     if (newPassword === confirmPassword) {
       let hashPassword = bcrypt.hashSync(newPassword, 10);
@@ -81,12 +81,41 @@ exports.editUser = async (req, res, next) => {
   const { error } = validate.editProfile(req.body);
 
   if (error) return res.status(400).send(error.details[0].message);
-  // const { name, bio, gender, dob, email, mobile } = req.body;
+  const { name, bio, gender, dob, email, mobile, removeImg } = req.body;
+  const current_user = req.user;
+
+  // console.log("r", req.body.removeImg);
+  
+  if (req.body.removeImg == "true") {
+    // console.log("hi")
+    await User.updateOne(
+      { _id: current_user._id },
+      {
+        name: name,
+        bio: bio,
+        gender: gender,
+        dob: dob,
+        email: email,
+        mobile: mobile,
+        photo: "",
+        removeImg: removeImg
+      }
+    );
+    let user = await User.findOne({ _id: current_user._id });
+    console.log("user",user);
+    return res.status(200).json({ user });
+  }
+  
+  // console.log(current_user._id);
+
+  // console.log("u",user)
   // console.log(req.file)
   // console.log(req.file.path)
-  const current_user = req.user;
-  // console.log(current_user.photo);
+  
+  const user1 = await User.findById({ _id: current_user._id });
+  // console.log("u",user.photo);
   // console.log(req.params.editId);
+  console.log("u", user1);
   if (current_user._id == req.params.editId) {
     await User.updateOne(
       { _id: current_user._id },
@@ -97,12 +126,12 @@ exports.editUser = async (req, res, next) => {
         dob: dob,
         email: email,
         mobile: mobile,
-        photo: req.file ? req.file.path : "",
+        photo: req.file ? req.file.path : user1.photo,
+        removeImg: removeImg
       }
     );
-    await User.findByIdAndUpdate(current_user._id, req.body)
     let user = await User.findOne({ _id: current_user._id });
-    console.log(user);
+    // console.log(user);
     res.status(200).json({ user });
   } else {
     return res.status(400).json({ message: "Enter valid data" });
@@ -188,7 +217,8 @@ getSignedToken = (user) => {
       createdOn: user.createdOn,
       updatedAt: user.updatedAt,
       name: user.name || "",
-      photo: user.photo
+      photo: user.photo,
+      removeImg: user.removeImg
     },
     SECRET_KEY,
     { expiresIn: "10h" }
